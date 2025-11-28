@@ -107,22 +107,34 @@ public class CartController : Controller
     public ActionResult Checkout()
     {
         string sessionKey = GetSessionKey();
-        var items = db.GioHangItems.Where(i => i.SessionKey == sessionKey).Include(i => i.SanPham).ToList();
+        var items = db.GioHangItems
+                      .Where(i => i.SessionKey == sessionKey)
+                      .Include(i => i.SanPham)
+                      .ToList();
 
-        if (items.Count == 0) return RedirectToAction("Index");
+        if (!items.Any()) return RedirectToAction("Index");
 
-        // Tính tổng tiền tạm tính
         ViewBag.Total = items.Sum(i => i.SoLuong * i.SanPham.GiaBan);
 
-        // Nếu đã đăng nhập, tự điền thông tin
-        var userModel = new KhachHang();
+        KhachHang userModel = null;
+        DiaChi defaultAddress = null;
+
         if (User.Identity.IsAuthenticated)
         {
             userModel = db.KhachHangs.Find(User.Identity.Name);
+            defaultAddress = db.DiaChis
+                               .FirstOrDefault(d => d.KhachHangEmail == User.Identity.Name && d.MacDinh);
         }
 
-        return View(userModel);
+        var checkoutModel = new CheckoutViewModel
+        {
+            KhachHang = userModel,
+            DefaultAddress = defaultAddress
+        };
+
+        return View(checkoutModel);
     }
+
 
     // 5. Xử lý đặt hàng (Action quan trọng nhất)
     [HttpPost]

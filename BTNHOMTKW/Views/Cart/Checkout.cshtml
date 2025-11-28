@@ -1,4 +1,4 @@
-﻿@model BTNHOMTKW.Models.KhachHang
+﻿@model BTNHOMTKW.Models.CheckoutViewModel
 @{
     ViewBag.Title = "Thanh toán";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,7 +12,6 @@
             overflow: hidden;
         }
 
-            
             .cart-page .card:hover {
                 transform: none !important;
                 box-shadow: none !important;
@@ -38,7 +37,7 @@
         </ol>
     </nav>
 
-    <!-- Nội dung thanh toán: chỉ 1 cột -->
+    <!-- Nội dung thanh toán -->
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-dark text-white py-3">
             <h5 class="mb-0 fw-bold"><i class="fas fa-credit-card me-2"></i> Thông tin đặt hàng</h5>
@@ -50,20 +49,22 @@
                 <div class="mb-3">
                     <label class="form-label fw-bold">Họ tên người nhận</label>
                     <input type="text" name="hoTen" class="form-control"
-                           value="@(Model?.HoTen)" required />
+                           value="@(Model?.KhachHang?.HoTen)" required />
                 </div>
 
                 <!-- Số điện thoại -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Số điện thoại</label>
                     <input type="text" name="sdt" class="form-control"
-                           value="@(Model?.SDT)" required />
+                           value="@(Model?.KhachHang?.SDT)" required />
                 </div>
 
                 <!-- Địa chỉ -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Địa chỉ giao hàng</label>
-                    <textarea name="diaChi" class="form-control" rows="3" required></textarea>
+                    <textarea name="diaChi" class="form-control" rows="3" required>
+@(Model?.DefaultAddress?.DiaChiChiTiet ?? "")
+</textarea>
                 </div>
 
                 <!-- Phương thức thanh toán -->

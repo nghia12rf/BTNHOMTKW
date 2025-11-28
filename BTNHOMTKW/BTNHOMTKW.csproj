@@ -146,6 +146,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AnhSanPham.cs" />
+    <Compile Include="Models\CheckoutViewModel.cs" />
     <Compile Include="Models\ChiTietDonHang.cs" />
     <Compile Include="Models\DanhGia.cs" />
     <Compile Include="Models\DanhMuc.cs" />
@@ -543,6 +544,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\images\product-details\product-details-1-17\" />
     <Folder Include="Content\images\product-details\products\" />
     <Folder Include="Views\BaseAdmin\" />
     <Folder Include="Views\DanhMucAPI\" />

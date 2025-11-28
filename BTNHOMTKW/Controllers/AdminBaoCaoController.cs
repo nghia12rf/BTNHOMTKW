@@ -204,7 +204,7 @@ public class AdminBaoCaoController : BaseAdminController
         return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
     }
 
-    // Placeholder cho Export (Bạn có thể cài thư viện EPPlus để làm phần này sau)
+    // Placeholder cho Export 
     public ActionResult ExportReport(DateTime? fromDate, DateTime? toDate, string reportType = "daily", string format = "excel")
     {
         var start = fromDate ?? DateTime.Now.AddDays(-30).Date;
