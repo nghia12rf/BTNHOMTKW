@@ -1,0 +1,75 @@
+﻿@model BTNHOMTKW.Models.SanPham
+@{
+    ViewBag.Title = "Thêm sản phẩm mới";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">@ViewBag.Title</h2>
+
+    @using (Html.BeginForm("Create", "AdminSanPhams", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(false, "", new { @class = "text-danger mb-3" })
+
+        <!-- Mã SP -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.MaSP, "Mã SP (Khóa chính)", new { @class = "form-label fw-bold" })
+            @Html.EditorFor(model => model.MaSP, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MaSP, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Tên SP -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.TenSP, "Tên SP", new { @class = "form-label fw-bold" })
+            @Html.EditorFor(model => model.TenSP, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TenSP, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Mô tả -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.MoTa, "Mô tả", new { @class = "form-label fw-bold" })
+            @Html.TextAreaFor(model => model.MoTa, 5, 80, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Danh mục -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.DanhMucTen, "Danh mục", new { @class = "form-label fw-bold" })
+            @Html.DropDownList("DanhMucTen", (SelectList)ViewBag.DanhMucTen, "--- Chọn danh mục ---", new { @class = "form-select" })
+            @Html.ValidationMessageFor(model => model.DanhMucTen, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Ảnh đại diện -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">Ảnh đại diện</label>
+            <input type="file" name="HinhAnhChinhFile" class="form-control" />
+        </div>
+
+        <!-- Giá bán -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.GiaBan, "Giá bán", new { @class = "form-label fw-bold" })
+            @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+            @Html.ValidationMessageFor(model => model.GiaBan, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Tồn kho -->
+        <div class="mb-3">
+            @Html.LabelFor(model => model.SoLuongTon, "Tồn kho", new { @class = "form-label fw-bold" })
+            @Html.EditorFor(model => model.SoLuongTon, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+            @Html.ValidationMessageFor(model => model.SoLuongTon, "", new { @class = "text-danger" })
+        </div>
+
+        <!-- Hiển thị -->
+        <div class="mb-3 form-check">
+            @Html.EditorFor(model => model.Active, new { htmlAttributes = new { @class = "form-check-input", @checked = "checked" } })
+            @Html.LabelFor(model => model.Active, "Hiển thị", new { @class = "form-check-label fw-bold" })
+        </div>
+
+        <!-- Nút hành động -->
+        <div class="mt-4">
+            <input type="submit" value="Tạo mới" class="btn btn-success me-2" />
+            @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+    }
+</div>

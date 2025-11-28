@@ -1,0 +1,23 @@
+﻿@model BTNHOMTKW.Models.SanPham
+
+<div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s;">
+    <a href="@Url.Action("Detail", "Product", new { id = Model.MaSP })" class="position-relative overflow-hidden">
+        <img class="card-img-top" src="@Model.HinhAnhChinh" alt="@Model.TenSP" style="height: 280px; object-fit: cover;">
+
+        @if (Model.GiaBan < 200000)
+        {
+            <span class="badge bg-danger position-absolute" style="top: 10px; left: 10px; padding: 5px 10px;">HOT</span>
+        }
+    </a>
+    <div class="card-body text-center p-3">
+        <div class="small text-muted mb-1">@Model.DanhMucTen</div>
+        <h6 class="card-title fw-bold mb-2">
+            <a href="@Url.Action("Detail", "Product", new { id = Model.MaSP })" class="text-dark text-decoration-none text-truncate d-block">
+                @Model.TenSP
+            </a>
+        </h6>
+        <div class="text-danger fw-bold">
+            @Model.GiaBan.ToString("#,##0") đ
+        </div>
+    </div>
+</div>

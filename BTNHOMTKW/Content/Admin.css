@@ -1,0 +1,192 @@
+﻿:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --success-color: #4cc9f0;
+    --dark-color: #2b2d42;
+    --light-color: #f8f9fa;
+    --sidebar-width: 260px;
+    --sidebar-collapsed-width: 70px;
+    --header-height: 64px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    padding-top: var(--header-height);
+    color: #374151;
+    overflow-x: hidden;
+}
+
+/* --- HEADER --- */
+.navbar-admin {
+    background: white;
+    height: var(--header-height);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 1rem;
+    z-index: 1001;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--primary-color) !important;
+    letter-spacing: -0.5px;
+}
+
+.user-info {
+    color: #4b5563;
+    margin-right: 15px;
+    font-weight: 500;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--header-height));
+    background: #1e293b;
+    color: #cbd5e1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+    .sidebar.collapsed {
+        width: var(--sidebar-collapsed-width);
+    }
+
+.sidebar-header {
+    padding: 1.5rem 1.25rem 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+}
+
+.menu-item {
+    margin-bottom: 2px;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+}
+
+    .menu-link:hover {
+        background-color: rgba(255,255,255,0.05);
+        color: #f1f5f9;
+    }
+
+    .menu-link.active {
+        background-color: rgba(67, 97, 238, 0.15);
+        color: #60a5fa;
+        border-left-color: #60a5fa;
+    }
+
+.menu-icon {
+    width: 24px;
+    margin-right: 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    transition: margin-right 0.3s ease;
+}
+
+/* Sidebar Collapsed State */
+.sidebar.collapsed .menu-text,
+.sidebar.collapsed .sidebar-header {
+    display: none;
+}
+
+.sidebar.collapsed .menu-icon {
+    margin-right: 0;
+    margin: 0 auto;
+}
+
+.sidebar.collapsed .menu-link {
+    padding: 0.75rem 0;
+    justify-content: center;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: calc(100vh - var(--header-height));
+}
+
+    .main-content.expanded {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+/* --- COMPONENTS --- */
+.sidebar-toggle {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+    .sidebar-toggle:hover {
+        background-color: #f1f5f9;
+        color: var(--primary-color);
+    }
+
+.dropdown-menu {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    border-radius: 0.5rem;
+}
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: var(--sidebar-width) !important;
+    }
+
+        .sidebar.mobile-open {
+            transform: translateX(0);
+            box-shadow: 10px 0 20px rgba(0,0,0,0.1);
+        }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+
+    .sidebar.mobile-open + .sidebar-overlay {
+        display: block;
+    }
+}

@@ -1,0 +1,32 @@
+﻿@model BTNHOMTKW.Models.DanhMuc
+@{
+    ViewBag.Title = "Xóa Danh mục";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-3">@ViewBag.Title</h2>
+
+    <h3 class="text-danger mb-3">Bạn có chắc chắn muốn xóa danh mục này?</h3>
+
+    <div class="alert alert-warning">
+        <strong>Cảnh báo:</strong> Việc xóa danh mục có thể ảnh hưởng đến các sản phẩm hoặc danh mục con đang liên kết với nó.
+    </div>
+
+    <dl class="row mb-4">
+        <dt class="col-sm-3">Tên Danh mục</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.TenDM)</dd>
+
+        <dt class="col-sm-3">Danh mục cha</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.ParentDM)</dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="d-flex gap-2">
+            <input type="submit" value="Xác nhận Xóa" class="btn btn-danger" />
+            @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+    }
+</div>

@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Hệ Thống Quản Trị</title>
+
+    @Styles.Render("~/Content/admincss")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-admin fixed-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="sidebar-toggle me-3" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <a class="navbar-brand" href="@Url.Action("Index", "AdminDashboard")">
+                    <i class="fas fa-cube me-2"></i>SHOP ADMIN
+                </a>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <div class="user-info d-none d-md-block small">
+                    <span class="text-muted">Xin chào,</span>
+                    <span class="fw-bold text-dark">@User.Identity.Name</span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link text-dark dropdown-toggle text-decoration-none" type="button" data-bs-toggle="dropdown">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end animate slideIn">
+                        <li><h6 class="dropdown-header">Tài khoản</h6></li>
+                        <li>
+                            <a href="/" class="dropdown-item" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>Xem trang web
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a href="@Url.Action("Logout", "Account")" class="dropdown-item text-danger" onclick="return confirm('Bạn muốn đăng xuất?')">
+                                <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span>QUẢN LÝ CỬA HÀNG</span>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminDashboard")" class="menu-link">
+                    <i class="menu-icon fas fa-tachometer-alt"></i>
+                    <span class="menu-text">Tổng quan</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminSanPhams")" class="menu-link">
+                    <i class="menu-icon fas fa-box-open"></i>
+                    <span class="menu-text">Sản phẩm</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminDanhMucs")" class="menu-link">
+                    <i class="menu-icon fas fa-tags"></i>
+                    <span class="menu-text">Danh mục</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminDonHangs")" class="menu-link">
+                    <i class="menu-icon fas fa-shopping-cart"></i>
+                    <span class="menu-text">Đơn hàng</span>
+                </a>
+            </li>
+
+            <div class="sidebar-header mt-3">
+                <span>KHÁCH HÀNG & PHẢN HỒI</span>
+            </div>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminKhachHangs")" class="menu-link">
+                    <i class="menu-icon fas fa-users"></i>
+                    <span class="menu-text">Khách hàng</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminDanhGias")" class="menu-link">
+                    <i class="menu-icon fas fa-star"></i>
+                    <span class="menu-text">Đánh giá / Review</span>
+                </a>
+            </li>
+
+            <div class="sidebar-header mt-3">
+                <span>BÁO CÁO</span>
+            </div>
+            <li class="menu-item">
+                <a href="@Url.Action("Index", "AdminBaoCao")" class="menu-link">
+                    <i class="menu-icon fas fa-chart-pie"></i>
+                    <span class="menu-text">Doanh thu</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content" id="mainContent">
+        @RenderBody()
+    </main>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggleBtn = document.getElementById('sidebarToggle');
+
+            // --- 1. ACTIVE MENU LOGIC ---
+            function setActiveMenu() {
+                const path = window.location.pathname.toLowerCase();
+                document.querySelectorAll('.menu-link').forEach(link => {
+                    const href = link.getAttribute('href')?.toLowerCase();
+                    if (href && href !== '/' && path.includes(href)) {
+                        document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // --- 2. SIDEBAR TOGGLE ---
+            toggleBtn.addEventListener('click', function () {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.toggle('mobile-open');
+                    if (sidebar.classList.contains('mobile-open')) {
+                        overlay.style.display = 'block';
+                    } else {
+                        overlay.style.display = 'none';
+                    }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                }
+            });
+
+            // Click overlay để đóng menu mobile
+            overlay.addEventListener('click', function () {
+                sidebar.classList.remove('mobile-open');
+                overlay.style.display = 'none';
+            });
+
+            // --- 3. INIT ---
+            setActiveMenu();
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('mobile-open');
+                    overlay.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,229 @@
+﻿@model BTNHOMTKW.Models.SanPham
+@{
+    ViewBag.Title = Model.TenSP;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles
+{
+    <style>
+        .product-thumb {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+            .product-thumb:hover, .active-thumb {
+                opacity: 1;
+                border: 2px solid #0d6efd !important; /* Viền xanh khi chọn */
+            }
+
+        #mainImage {
+            transition: transform 0.3s ease;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+            #mainImage:hover {
+                transform: scale(1.02);
+            }
+    </style>
+}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white ps-0">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Product", new { slug = Model.DanhMuc.Slug })">@Model.DanhMucTen</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.TenSP</li>
+        </ol>
+    </nav>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fa fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 text-center">
+                <img id="mainImage" src="@Model.HinhAnhChinh" class="img-fluid" alt="@Model.TenSP" />
+            </div>
+
+            <div class="d-flex justify-content-center mt-3 flex-wrap">
+                <div class="p-1 border me-2 mb-2 product-thumb active-thumb" onclick="changeImage(this)">
+                    <img src="@Model.HinhAnhChinh" width="60" height="60" style="object-fit: cover;" />
+                </div>
+                @if (Model.AnhSanPhams != null)
+                {
+                    foreach (var img in Model.AnhSanPhams.OrderBy(x => x.ThuTu))
+                    {
+                        <div class="p-1 border me-2 mb-2 product-thumb" onclick="changeImage(this)">
+                            <img src="@img.FileAnh" width="60" height="60" style="object-fit: cover;" />
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="fw-bold">@Model.TenSP</h2>
+            <div class="mb-3">
+                <span class="text-warning">
+                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                </span>
+                <span class="text-muted ms-2">(@Model.DanhGias.Count đánh giá)</span>
+            </div>
+
+            <h3 class="text-danger fw-bold">@Model.GiaBan.ToString("#,##0") đ</h3>
+
+            <ul class="list-unstyled mt-3 text-muted small">
+                <li><i class="fa fa-check text-success"></i> Mã SP: <strong>@Model.MaSP</strong></li>
+                <li><i class="fa fa-check text-success"></i> SKU: @Model.SKU</li>
+                <li><i class="fa fa-check text-success"></i> Tình trạng: @(Model.SoLuongTon > 0 ? "Còn hàng" : "Hết hàng")</li>
+            </ul>
+
+            <p class="mt-3">@Html.Raw(Model.MoTa)</p>
+
+            <hr />
+
+            @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("maSP", Model.MaSP)
+
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <label class="fw-bold">Size:</label>
+                        @Html.DropDownList("size", (SelectList)ViewBag.Sizes, new { @class = "form-select" })
+                    </div>
+                    <div class="col-auto">
+                        <label class="fw-bold">Màu:</label>
+                        @Html.DropDownList("mau", (SelectList)ViewBag.Maus, new { @class = "form-select" })
+                    </div>
+                    <div class="col-auto">
+                        <label class="fw-bold">Số lượng:</label>
+                        <input type="number" name="soLuong" value="1" min="1" max="@Model.SoLuongTon" class="form-control" style="width: 80px" />
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-dark btn-lg px-5">
+                        <i class="fa fa-shopping-cart me-2"></i> THÊM VÀO GIỎ
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    @if (ViewBag.Related != null)
+    {
+        <h4 class="mb-4 fw-bold text-uppercase">Sản phẩm liên quan</h4>
+        <div class="row mb-5">
+            @foreach (var item in ViewBag.Related as List<BTNHOMTKW.Models.SanPham>)
+            {
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <a href="@Url.Action("Detail", "Product", new { id = item.MaSP })">
+                            <img src="@item.HinhAnhChinh" class="card-img-top" alt="@item.TenSP" style="height: 200px; object-fit: cover;">
+                        </a>
+                        <div class="card-body text-center p-2">
+                            <h6 class="card-title mb-1">
+                                <a href="@Url.Action("Detail", "Product", new { id = item.MaSP })" class="text-dark">@item.TenSP</a>
+                            </h6>
+                            <p class="text-danger fw-bold">@item.GiaBan.ToString("#,##0") đ</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <hr class="my-5" />
+
+    <div class="row">
+        <div class="col-md-8">
+            <h4 class="mb-4 fw-bold">Đánh giá khách hàng (@Model.DanhGias.Count)</h4>
+
+            <div class="card bg-light mb-4 border-0">
+                <div class="card-body">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form action="@Url.Action("SubmitReview", "Product")" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="maSP" value="@Model.MaSP" />
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label fw-bold">Đánh giá của bạn:</label>
+                                <div class="col-sm-9">
+                                    <select name="soSao" class="form-select w-auto d-inline-block">
+                                        <option value="5">⭐⭐⭐⭐⭐ (Tuyệt vời)</option>
+                                        <option value="4">⭐⭐⭐⭐ (Tốt)</option>
+                                        <option value="3">⭐⭐⭐ (Bình thường)</option>
+                                        <option value="2">⭐⭐ (Kém)</option>
+                                        <option value="1">⭐ (Rất tệ)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="binhLuan" class="form-control" rows="3" placeholder="Chia sẻ cảm nhận về sản phẩm..." required></textarea>
+                            </div>
+                            <button class="btn btn-success float-end">Gửi đánh giá</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="text-center py-3">
+                            <p>Vui lòng <a href="@Url.Action("Login", "Account")" class="fw-bold">Đăng nhập</a> để viết đánh giá.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @foreach (var dg in Model.DanhGias.OrderByDescending(d => d.NgayDG))
+            {
+                <div class="d-flex mb-4 border-bottom pb-3">
+                    <img src="https://via.placeholder.com/50?text=@dg.KhachHangEmail.Substring(0,1)"
+                         class="me-3 rounded-circle" alt="User" width="50">
+                    <div>
+                        <h6 class="mb-1 fw-bold">
+                            @dg.KhachHangEmail
+                            <span class="text-warning small ms-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= dg.SoSao)
+                                    {<i class="fa fa-star"></i>}
+                                    else
+                                    {<i class="far fa-star"></i>}
+                                }
+                            </span>
+                        </h6>
+                        <small class="text-muted d-block mb-2">@dg.NgayDG.ToString("dd/MM/yyyy HH:mm")</small>
+                        <p class="mb-0">@dg.BinhLuan</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function changeImage(element) {
+            var newSrc = element.querySelector('img').src;
+            document.getElementById('mainImage').src = newSrc;
+
+            document.querySelectorAll('.product-thumb').forEach(el => el.classList.remove('active-thumb'));
+            element.classList.add('active-thumb');
+        }
+    </script>
+}
+

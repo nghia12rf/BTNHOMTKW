@@ -1,0 +1,61 @@
+﻿@model IEnumerable<BTNHOMTKW.Models.SanPham>
+@{
+    ViewBag.Title = "Thùng rác Sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger fw-bold mb-3">@ViewBag.Title</h2>
+
+    <p>
+        @Html.ActionLink("← Quay lại danh sách sản phẩm", "Index", null, new { @class = "btn btn-secondary" })
+    </p>
+
+    <div class="alert alert-warning">
+        Đây là các sản phẩm đã bị xóa. Bạn có thể khôi phục chúng để bán lại.
+    </div>
+
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên Sản phẩm</th>
+                <th>Giá bán</th>
+                <th>Danh mục</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content(item.HinhAnhChinh)" alt="@item.TenSP" width="60" class="img-thumbnail" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenSP)
+                        <br />
+                        <small class="text-muted">SKU: @item.SKU</small>
+                    </td>
+                    <td>
+                        @String.Format("{0:N0} VNĐ", item.GiaBan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DanhMuc.TenDM)
+                    </td>
+                    <td>
+                        @Html.ActionLink("♻️ Khôi phục", "KhoiPhuc", new { id = item.MaSP },
+                            new { @class = "btn btn-success btn-sm", @onclick = "return confirm('Bạn có muốn khôi phục sản phẩm này không?');" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted mt-4">
+            <p>Thùng rác trống!</p>
+        </div>
+    }
+</div>

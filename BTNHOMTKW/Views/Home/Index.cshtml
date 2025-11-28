@@ -1,0 +1,165 @@
+﻿@model IEnumerable<BTNHOMTKW.Models.SanPham>
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var bestSellers = ViewBag.BestSellers as List<BTNHOMTKW.Models.SanPham>;
+}
+
+@section Styles {
+    <style>
+        /* Banner Slider */
+        .carousel-item {
+            height: 500px;
+            background-color: #333;
+        }
+
+            .carousel-item img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                opacity: 0.9;
+            }
+
+        .carousel-caption {
+            bottom: 30%;
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Tab Tiêu đề */
+        .tab-header {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tab-item {
+            cursor: pointer;
+            color: #999;
+            font-weight: 400;
+            transition: all 0.3s;
+            padding: 0 10px;
+        }
+
+            .tab-item.active {
+                color: #000;
+                font-weight: 800;
+                border-bottom: 2px solid #000;
+            }
+
+            .tab-item:hover {
+                color: #333;
+            }
+    </style>
+}
+
+<!-- === BANNER SLIDER === -->
+<div id="homeCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#homeCarousel" data-bs-slide-to="1"></li>
+        <li data-bs-target="#homeCarousel" data-bs-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/Content/images/banner/Banner-1.jpg" alt="Banner 1">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold">BỘ SƯU TẬP MÙA HÈ</h2>
+                <p class="lead">Giảm giá 50% cho tất cả sản phẩm mới.</p>
+                <a href="@Url.Action("Index", "Product")" class="btn btn-light btn-lg fw-bold rounded-pill px-4 mt-2">MUA NGAY</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/images/banner/Banner-2.jpg" alt="Banner 2">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold">THỜI TRANG CÔNG SỞ</h2>
+                <p class="lead">Thanh lịch, hiện đại và tinh tế.</p>
+                <a href="@Url.Action("Index", "Product", new { slug = "thoi-trang-nu" })" class="btn btn-light btn-lg fw-bold rounded-pill px-4 mt-2">XEM CHI TIẾT</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="~/Content/images/banner/Banner-3.jpg" alt="Banner 3">
+            <div class="carousel-caption d-none d-md-block">
+                <h2 class="display-4 fw-bold">PHỤ KIỆN & GIÀY</h2>
+                <p class="lead">Hoàn thiện phong cách của bạn.</p>
+                <a href="@Url.Action("Index", "Product", new { slug = "giay-dep" })" class="btn btn-light btn-lg fw-bold rounded-pill px-4 mt-2">KHÁM PHÁ</a>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+</div>
+
+<!-- === TAB SẢN PHẨM === -->
+<div class="container mb-4">
+    <div class="text-center tab-header">
+        <span class="tab-item active" onclick="openTab('bestseller', this)">BEST SELLER</span>
+        <span class="mx-2 text-muted">/</span>
+        <span class="tab-item" onclick="openTab('newarrival', this)">NEW ARRIVAL</span>
+    </div>
+    <hr class="w-25 mx-auto border-dark mt-3 mb-5" />
+</div>
+
+<!-- === DANH SÁCH SẢN PHẨM === -->
+<div class="container">
+    <div id="bestseller" class="product-tab-content">
+        <div class="row">
+            @if (bestSellers != null)
+            {
+                foreach (var item in bestSellers)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        @Html.Partial("_ProductCard", item)
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div id="newarrival" class="product-tab-content" style="display: none;">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    @Html.Partial("_ProductCard", item)
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-5">
+        <a href="@Url.Action("Index", "Product")" class="btn btn-outline-dark rounded-pill px-5 py-2">
+            XEM TẤT CẢ SẢN PHẨM
+        </a>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function openTab(tabName, element) {
+            // Ẩn tất cả nội dung tab
+            document.querySelectorAll('.product-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+
+            // Hiện tab được chọn
+            const selected = document.getElementById(tabName);
+            if (selected) {
+                selected.style.display = 'block';
+            }
+
+            // Đổi style tiêu đề active
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+    </script>
+}

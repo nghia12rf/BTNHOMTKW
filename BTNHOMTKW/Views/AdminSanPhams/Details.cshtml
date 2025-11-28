@@ -1,0 +1,52 @@
+﻿@model BTNHOMTKW.Models.SanPham
+@{
+    ViewBag.Title = "Chi tiết Sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">@ViewBag.Title</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="fw-bold text-primary mb-3">@Model.TenSP</h4>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-3">Mã SP</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.MaSP)</dd>
+
+                <dt class="col-sm-3">SKU</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SKU)</dd>
+
+                <dt class="col-sm-3">Mô tả</dt>
+                <dd class="col-sm-9">@Html.Raw(Model.MoTa.Replace("\n", "<br />"))</dd>
+
+                <dt class="col-sm-3">Danh mục</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.DanhMuc.TenDM)</dd>
+
+                <dt class="col-sm-3">Giá bán</dt>
+                <dd class="col-sm-9">@String.Format("{0:N0} VNĐ", Model.GiaBan)</dd>
+
+                <dt class="col-sm-3">Tồn kho</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SoLuongTon)</dd>
+
+                <dt class="col-sm-3">Trạng thái</dt>
+                <dd class="col-sm-9">@(Model.Active ? "Đang bán" : "Đã ẩn")</dd>
+
+                <dt class="col-sm-3">Ngày tạo</dt>
+                <dd class="col-sm-9">@Model.NgayTao.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3">Ảnh</dt>
+                <dd class="col-sm-9">
+                    <img src="@Url.Content(Model.HinhAnhChinh)" alt="@Model.TenSP" width="200" class="img-thumbnail" />
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @Html.ActionLink("Sửa", "Edit", new { id = Model.MaSP }, new { @class = "btn btn-warning me-2" })
+        @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>

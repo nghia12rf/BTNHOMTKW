@@ -1,0 +1,198 @@
+﻿@model IEnumerable<BTNHOMTKW.Models.DanhGia>
+@{
+    ViewBag.Title = "Quản lý Đánh giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 text-primary"><i class="fas fa-star-half-alt me-2"></i>@ViewBag.Title</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "AdminDashboard")">Dashboard</a></li>
+                <li class="breadcrumb-item active">Danh sách đánh giá</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div>
+        <button class="btn btn-outline-primary btn-lg shadow-sm disabled">
+            <i class="fas fa-chart-bar me-2"></i>Tổng: @Model.Count() đánh giá
+        </button>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-gradient-primary text-white py-3">
+        <h5 class="mb-0"><i class="fas fa-filter me-2"></i> Bộ lọc tìm kiếm</h5>
+    </div>
+    <div class="card-body p-4">
+        @using (Html.BeginForm("Index", "AdminDanhGias", FormMethod.Get, new { @class = "row g-3 align-items-end" }))
+        {
+            <div class="col-md-5">
+                <label class="form-label small text-muted fw-bold mb-1">Từ khóa</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="searchString" class="form-control form-control-lg" placeholder="Tên sản phẩm, email khách hàng..." />
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label small text-muted fw-bold mb-1">Số sao</label>
+                <select name="searchRating" class="form-select form-select-lg">
+                    <option value="">--- Tất cả ---</option>
+                    <option value="5">5 Sao (Tuyệt vời)</option>
+                    <option value="4">4 Sao (Tốt)</option>
+                    <option value="3">3 Sao (Bình thường)</option>
+                    <option value="2">2 Sao (Kém)</option>
+                    <option value="1">1 Sao (Tệ)</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-info btn-lg w-100 text-white fw-bold">
+                    Lọc dữ liệu
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-dark"><i class="fas fa-list me-2"></i> Kết quả hiển thị</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-light text-uppercase small fw-bold">
+                    <tr>
+                        <th class="ps-4" style="width: 80px;">Ảnh SP</th>
+                        <th>Sản phẩm & Khách hàng</th>
+                        <th class="text-center" style="width: 150px;">Đánh giá</th>
+                        <th>Nội dung bình luận</th>
+                        <th class="text-center" style="width: 150px;">Ngày giờ</th>
+                        <th class="text-center" style="width: 100px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="text-muted opacity-50">
+                                    <i class="far fa-comment-dots fa-4x mb-3"></i>
+                                    <p class="h5">Chưa có đánh giá nào</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="position-relative d-inline-block">
+                                        <img src="@Url.Content(item.SanPham.HinhAnhChinh)"
+                                             class="rounded border"
+                                             style="width: 60px; height: 60px; object-fit: cover;"
+                                             onerror="this.src='@Url.Content("~/Content/images/no-image.png")'" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-primary">@item.SanPham.TenSP</div>
+                                    <div class="small text-muted mb-1"><i class="fas fa-barcode me-1"></i>@item.MaSP</div>
+                                    <div class="d-flex align-items-center mt-1">
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px;">
+                                            <i class="fas fa-user text-secondary small"></i>
+                                        </div>
+                                        <span class="small text-dark fw-bold">@item.KhachHang.HoTen</span>
+                                    </div>
+                                    <div class="small text-muted ms-4 ps-1">@item.KhachHangEmail</div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="text-warning mb-1" style="font-size: 0.9rem;">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= item.SoSao)
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star text-secondary opacity-25"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <span class="badge bg-light text-dark border">@item.SoSao / 5</span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.BinhLuan))
+                                    {
+                                        <div class="p-2 bg-light rounded border border-light text-secondary fst-italic small">
+                                            "@item.BinhLuan"
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Checking... (Không có nội dung)</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <span class="fw-bold text-dark">@item.NgayDG.ToString("dd/MM/yyyy")</span>
+                                        <span class="small text-muted">@item.NgayDG.ToString("HH:mm")</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm shadow-sm">
+                                        <a href="@Url.Action("Delete", new { maSP = item.MaSP, email = item.KhachHangEmail })"
+                                           class="btn btn-light text-danger"
+                                           title="Xóa đánh giá này"
+                                           onclick="return confirm('Bạn có chắc muốn xóa đánh giá này? Hành động không thể hoàn tác.');">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-white py-3">
+        <small class="text-muted">Hiển thị @Model.Count() đánh giá mới nhất.</small>
+    </div>
+</div>
+@section Styles
+{
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+    }
+
+    .table > :not(caption) > * > * {
+        vertical-align: middle;
+    }
+
+    .btn-group .btn {
+        border: 1px solid #e3e6f0;
+    }
+
+        .btn-group .btn:hover {
+            background-color: #f8f9fc;
+        }
+
+    .form-control-lg, .form-select-lg, .btn-lg {
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+</style>
+}

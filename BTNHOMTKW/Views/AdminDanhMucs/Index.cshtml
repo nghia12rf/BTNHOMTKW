@@ -1,0 +1,94 @@
+﻿@model IEnumerable<BTNHOMTKW.Models.DanhMuc>
+@{
+    ViewBag.Title = "Quản lý Danh mục";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 text-primary"><i class="fas fa-tags me-2"></i>@ViewBag.Title</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "AdminDashboard")">Dashboard</a></li>
+                <li class="breadcrumb-item active">Danh sách danh mục</li>
+            </ol>
+        </nav>
+    </div>
+    <a href="@Url.Action("Create")" class="btn btn-primary btn-lg shadow-sm">
+        <i class="fas fa-plus me-2"></i>Thêm danh mục
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3">
+        <h5 class="mb-0 text-dark"><i class="fas fa-list me-2"></i> Tất cả danh mục</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-light text-uppercase small fw-bold">
+                    <tr>
+                        <th class="ps-4">Tên Danh mục</th>
+                        <th>Slug (Đường dẫn)</th>
+                        <th>Danh mục Cha</th>
+                        <th class="text-center" style="width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark">@item.TenDM</span>
+                            </td>
+                            <td>
+                                <span class="text-muted font-monospace small">/@item.Slug</span>
+                            </td>
+                            <td>
+                                @if (item.ParentDM != null)
+                                {
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
+                                        <i class="fas fa-level-up-alt me-1"></i> @item.ParentDM
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
+                                        <i class="fas fa-star me-1"></i> Danh mục gốc
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm shadow-sm">
+                                    <a href="@Url.Action("Edit", new { id = item.TenDM })" class="btn btn-light text-primary" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("Delete", new { id = item.TenDM })" class="btn btn-light text-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Styles
+{
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .btn-group .btn {
+        border: 1px solid #e3e6f0;
+    }
+
+        .btn-group .btn:hover {
+            background-color: #f8f9fc;
+        }
+</style>
+}

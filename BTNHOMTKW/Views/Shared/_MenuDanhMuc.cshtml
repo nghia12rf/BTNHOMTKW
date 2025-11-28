@@ -1,0 +1,49 @@
+﻿@using BTNHOMTKW.Models
+@model IEnumerable<DanhMuc>
+
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        SẢN PHẨM
+    </a>
+
+    <ul class="dropdown-menu border-0 shadow" aria-labelledby="navbarDropdown">
+        <li>
+            <a class="dropdown-item fw-bold" href="@Url.Action("Index", "Product")">Tất cả sản phẩm</a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+
+        @foreach (var parentItem in Model.Where(x => x.ParentDM == null))
+        {
+            var childItems = Model.Where(x => x.ParentDM == parentItem.TenDM).ToList();
+
+            if (childItems.Count > 0)
+            {
+                <!-- TRƯỜNG HỢP CÓ CON -->
+                <li class="dropend">
+                    <a class="dropdown-item dropdown-toggle" href="@Url.Action("Index", "Product", new { slug = parentItem.Slug })" data-bs-toggle="dropdown" aria-expanded="false">
+                        @parentItem.TenDM
+                    </a>
+                    <ul class="dropdown-menu border-0 shadow">
+                        @foreach (var child in childItems)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Index", "Product", new { slug = child.Slug })">
+                                    @child.TenDM
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <!-- TRƯỜNG HỢP KHÔNG CÓ CON -->
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("Index", "Product", new { slug = parentItem.Slug })">
+                        @parentItem.TenDM
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+</li>

@@ -1,0 +1,164 @@
+﻿@{
+    ViewBag.Title = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        .register-wrapper {
+            padding: 60px 15px;
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 500px; /* giống trang đăng nhập */
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 32px; /* đồng bộ với login */
+            font-weight: 500;
+            margin-bottom: 40px;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600; /* giống login */
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            max-width: 100% !important;
+            height: 50px; /* giống login */
+            padding: 10px 15px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #e1e1e1; /* giống login */
+            border-radius: 4px;
+            transition: border-color 0.15s ease-in-out;
+            box-sizing: border-box;
+        }
+
+            .form-control:focus {
+                border-color: #000;
+                outline: 0;
+                box-shadow: none;
+            }
+
+            .form-control::placeholder {
+                color: #aaa;
+                font-weight: 400;
+            }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 0;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+            .btn-submit:hover {
+                background-color: #333;
+            }
+
+        .bottom-link {
+            text-align: center;
+            margin-top: 30px; /* giống login */
+            font-size: 14px;
+            color: #666;
+        }
+
+            .bottom-link a {
+                color: #000;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .bottom-link a:hover {
+                    text-decoration: underline;
+                }
+
+        input:-webkit-autofill {
+            box-shadow: 0 0 0 30px white inset !important;
+            -webkit-text-fill-color: #333 !important;
+        }
+    </style>
+}
+
+
+<div class="register-wrapper">
+    <div class="register-container">
+        <h1 class="page-title">Đăng ký</h1>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center border-0 bg-light text-danger mb-4">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label class="form-label">Số điện thoại *</label>
+                <input type="tel" name="sdt" class="form-control" placeholder="Số điện thoại" required pattern="[0-9]{10,11}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mật khẩu *</label>
+                <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Họ và tên *</label>
+                <input type="text" name="hoTen" class="form-control" placeholder="Họ và tên" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Ngày sinh *</label>
+                <input type="text" name="ngaySinh" class="form-control" placeholder="Ngày sinh"
+                       onfocus="(this.type='date')" onblur="(this.type='text')" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Đăng ký</button>
+        }
+
+        <div class="bottom-link">
+            Bạn đã có tài khoản? <a href="@Url.Action("Login", "Account")">Đăng nhập tại đây</a>
+        </div>
+    </div>
+</div>

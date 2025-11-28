@@ -1,0 +1,103 @@
+﻿@model BTNHOMTKW.Models.DonHang
+@{
+    ViewBag.Title = "Chi tiết đơn hàng " + Model.MaDonHang;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">Chi tiết đơn hàng: #@Model.MaDonHang</h2>
+        <a href="@Url.Action("MyProfile", "Account")" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white fw-bold">
+                    Thông tin người nhận
+                </div>
+                <div class="card-body">
+                    <p><strong>Họ tên:</strong> @Model.HoTenNguoiNhan</p>
+                    <p><strong>Số điện thoại:</strong> @Model.SDTNguoiNhan</p>
+                    <p><strong>Địa chỉ:</strong> @Model.DiaChiGiaoHang</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white fw-bold">
+                    Thông tin đơn hàng
+                </div>
+                <div class="card-body">
+                    <p><strong>Ngày đặt:</strong> @Model.NgayDat.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p>
+                        <strong>Trạng thái:</strong>
+                        <span class="badge bg-warning">@Model.TrangThai</span>
+                    </p>
+                    <p><strong>Thanh toán:</strong> @Model.PTThanhToan (@Model.TrangThaiThanhToan)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            Danh sách sản phẩm
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Phân loại</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-center">SL</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ChiTietDonHangs)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.SanPham.HinhAnhChinh" width="50" class="me-2 border" />
+                                <a href="@Url.Action("Detail", "Product", new { id = item.MaSP })">
+                                    @item.SanPham.TenSP
+                                </a>
+                            </td>
+                            <td>Size: @item.TenSize <br /> Màu: @item.TenMau</td>
+                            <td class="text-end">@item.DonGia.ToString("#,##0") đ</td>
+                            <td class="text-center">@item.SoLuong</td>
+                            <td class="text-end fw-bold">
+                                @((item.DonGia * item.SoLuong).ToString("#,##0")) đ
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end">Tạm tính:</td>
+                        <td class="text-end">@Model.ThanhTien.ToString("#,##0") đ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-end">Phí vận chuyển:</td>
+                        <td class="text-end">@Model.PhiVanChuyen.ToString("#,##0") đ</td>
+                    </tr>
+                    <tr class="bg-light">
+                        <td colspan="4" class="text-end text-danger fw-bold h5">TỔNG CỘNG:</td>
+                        <td class="text-end text-danger fw-bold h5">@Model.TongTien.ToString("#,##0") đ</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.TrangThai == "Đang xử lý")
+    {
+        <div class="text-end mt-3">
+            <button class="btn btn-danger" onclick="alert('Chức năng hủy đơn cần gọi API cập nhật CSDL')">Hủy đơn hàng này</button>
+        </div>
+    }
+</div>

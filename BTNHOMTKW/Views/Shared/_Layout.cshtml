@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - PUREAR</title>
+
+    @Styles.Render("~/Content/usercss")
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @RenderSection("Styles", required: false)
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold me-5" href="@Url.Action("Index", "Home")">
+                <img src="~/Content/images/logo/logo1.drawio.png" alt="Purear Logo" style="height:40px;"> Purear
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainMenu">
+                <ul class="navbar-nav me-auto align-items-center">
+                    <li class="nav-item active">
+                        <a class="nav-link fw-bold text-dark" href="@Url.Action("Index", "Home")">TRANG CHỦ</a>
+                    </li>
+
+                    @Html.Action("_MenuDanhMuc", "Home")
+
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark" href="@Url.Action("About", "Home")">GIỚI THIỆU</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark" href="@Url.Action("Contact", "Home")">LIÊN HỆ</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    <!-- Form Tìm kiếm -->
+                    <form class="d-flex me-3" action="@Url.Action("Index", "Product")" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Tìm sản phẩm..." name="searchString" value="@ViewBag.Keyword">
+                        <button class="btn btn-outline-secondary bg-white" type="submit">
+                            <i class="fa fa-search text-muted"></i>
+                        </button>
+                    </form>
+
+                    <!-- Icon Giỏ hàng -->
+                    <div class="me-4">
+                        @Html.Action("BagCart", "Cart")
+                    </div>
+
+                    <!-- User Account -->
+                    @if (Request.IsAuthenticated)
+                    {
+                        <div class="dropdown">
+                            <a class="text-dark text-decoration-none dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg text-dark me-1"></i>
+                                @User.Identity.Name.Split('@')[0]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li><a class="dropdown-item" href="@Url.Action("MyProfile", "Account")">Tài khoản của tôi</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="@Url.Action("Logout", "Account")">Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm fw-bold text-dark" href="@Url.Action("Login", "Account")">
+                            <i class="fas fa-user me-1"></i> Đăng nhập
+                        </a>
+                        <span class="mx-1">/</span>
+                        <a class="btn btn-sm fw-bold text-dark" href="@Url.Action("Register", "Account")">
+                            <i class="fas fa-user-plus me-1"></i> Đăng ký
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Body -->
+    <div class="container-fluid px-4 body-content" style="min-height: 600px;">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <!-- Thông tin cửa hàng -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand mb-3">
+                        <span class="brand-name">PUREAR</span>
+                    </div>
+                    <p class="text-white-50 mb-3">Thời trang tối giản, tinh tế và hiện đại. PUREAR mang đến sự thanh lịch trong từng chi tiết.</p>
+
+                    <!-- Mạng xã hội -->
+                    <div class="social-links mb-3">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+
+                    <!-- Phương thức thanh toán -->
+                    <div class="payment-methods">
+                        <p class="small mb-2">Chấp nhận thanh toán:</p>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-paypal"></i>
+                            <i class="fab fa-cc-apple-pay"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liên kết nhanh -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3 fw-bold">Cửa hàng</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="@Url.Action("Index", "Products")" class="text-white-50 footer-link">Sản phẩm mới</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Index", "Products", new { category = "nam" })" class="text-white-50 footer-link">Thời trang Nam</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Index", "Products", new { category = "nu" })" class="text-white-50 footer-link">Thời trang Nữ</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Sale", "Products")" class="text-white-50 footer-link">Khuyến mãi</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Collections", "Products")" class="text-white-50 footer-link">Bộ sưu tập</a></li>
+                    </ul>
+                </div>
+
+                <!-- Hỗ trợ khách hàng -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3 fw-bold">Hỗ trợ</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="@Url.Action("About", "Home")" class="text-white-50 footer-link">Về PUREAR</a></li>
+                        <li class="mb-2"><a href="@Url.Action("Contact", "Home")" class="text-white-50 footer-link">Liên hệ & Hỗ trợ</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">Hướng dẫn mua hàng</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+
+                <!-- Liên hệ -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3 fw-bold">Liên hệ</h6>
+                    <ul class="list-unstyled contact-info">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP.HCM</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i><a href="mailto:contact@purear.com" class="text-white-50">contact@purear.com</a></li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i><a href="tel:+84123456789" class="text-white-50">+84 123 456 789</a></li>
+                        <li class="mb-2"><i class="fas fa-clock me-2"></i>Thứ 2 - Chủ nhật: 8:00 - 22:00</li>
+                    </ul>
+
+                    <!-- Đăng ký nhận tin -->
+                    <div class="newsletter mt-4">
+                        <h6 class="text-uppercase mb-3 fw-bold">Đăng ký nhận tin</h6>
+                        <p class="small text-white-50 mb-2">Nhận thông tin về sản phẩm mới và khuyến mãi đặc biệt</p>
+                        <form class="subscribe-form">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Email của bạn" aria-label="Email" required>
+                                <button class="btn btn-outline-light" type="submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="bg-secondary my-4" />
+
+            <!-- Phần dưới cùng -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-white-50 mb-0">&copy; @DateTime.Now.Year - PUREAR. Tất cả quyền được bảo lưu.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-links">
+                        <a href="#" class="text-white-50 small me-3">Điều khoản sử dụng</a>
+                        <a href="#" class="text-white-50 small">Chính sách bảo mật</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

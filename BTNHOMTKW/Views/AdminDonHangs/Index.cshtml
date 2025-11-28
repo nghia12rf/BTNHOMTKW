@@ -1,0 +1,98 @@
+﻿@model IEnumerable<BTNHOMTKW.Models.DonHang>
+@{
+    ViewBag.Title = "Quản lý Đơn hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-1 text-primary"><i class="fas fa-shopping-cart me-2"></i>@ViewBag.Title</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="@Url.Action("Index", "AdminDashboard")">Dashboard</a></li>
+                <li class="breadcrumb-item active">Danh sách đơn hàng</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-dark"><i class="fas fa-list me-2"></i> Đơn hàng gần đây</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 align-middle">
+                <thead class="table-light text-uppercase small fw-bold">
+                    <tr>
+                        <th class="ps-4">Mã ĐH</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Địa chỉ giao</th>
+                        <th class="text-end">Tổng tiền</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <span class="fw-bold text-primary">#@item.MaDonHang</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold">@item.KhachHang.HoTen</div>
+                                <div class="small text-muted"><i class="fas fa-phone-alt me-1"></i>@item.SDTNguoiNhan</div>
+                            </td>
+                            <td>
+                                @item.NgayDat.ToString("dd/MM/yyyy")
+                                <div class="small text-muted">@item.NgayDat.ToString("HH:mm")</div>
+                            </td>
+                            <td>
+                                <div class="text-truncate" style="max-width: 200px;" title="@item.DiaChiGiaoHang">
+                                    @item.DiaChiGiaoHang
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                <span class="fw-bold text-success">@String.Format("{0:N0} đ", item.ThanhTien)</span>
+                            </td>
+                            <td class="text-center">
+                                @{
+                                    string badgeClass = "bg-secondary";
+                                    if (item.TrangThai == "Hoàn thành") { badgeClass = "bg-success"; }
+                                    else if (item.TrangThai == "Đang xử lý") { badgeClass = "bg-warning text-dark"; }
+                                    else if (item.TrangThai == "Đang giao") { badgeClass = "bg-info text-dark"; }
+                                    else if (item.TrangThai == "Đã hủy") { badgeClass = "bg-danger"; }
+                                }
+                                <span class="badge @badgeClass bg-opacity-75">
+                                    @item.TrangThai
+                                </span>
+                                <div class="small text-muted mt-1">
+                                    @if (item.TrangThaiThanhToan == "Đã thanh toán")
+                                    {<i class="fas fa-check-circle text-success" title="Đã thanh toán"></i> }
+                                    else
+                                    { <i class="fas fa-clock text-warning" title="Chưa thanh toán"></i>}
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="@Url.Action("Details", new { id = item.MaDonHang })" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="fas fa-eye me-1"></i> Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Styles 
+{
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+</style>
+}

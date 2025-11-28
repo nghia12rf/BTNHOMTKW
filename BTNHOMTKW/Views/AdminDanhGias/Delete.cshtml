@@ -1,0 +1,54 @@
+﻿@model BTNHOMTKW.Models.DanhGia
+
+@{
+    ViewBag.Title = "Xóa đánh giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fa fa-exclamation-triangle"></i> Xác nhận xóa đánh giá</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead text-center">Bạn có chắc chắn muốn xóa đánh giá này không?</p>
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-4">Sản phẩm:</dt>
+                        <dd class="col-sm-8">@Model.SanPham.TenSP</dd>
+
+                        <dt class="col-sm-4">Người đánh giá:</dt>
+                        <dd class="col-sm-8">@Model.KhachHangEmail</dd>
+
+                        <dt class="col-sm-4">Số sao:</dt>
+                        <dd class="col-sm-8 text-warning">
+                            @Model.SoSao <i class="fa fa-star"></i>
+                        </dd>
+
+                        <dt class="col-sm-4">Nội dung:</dt>
+                        <dd class="col-sm-8">
+                            <em>"@Model.BinhLuan"</em>
+                        </dd>
+
+                        <dt class="col-sm-4">Ngày giờ:</dt>
+                        <dd class="col-sm-8">@Model.NgayDG.ToString("dd/MM/yyyy HH:mm")</dd>
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("maSP", Model.MaSP)
+                        @Html.Hidden("email", Model.KhachHangEmail)
+
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("Index")" class="btn btn-secondary me-2">Quay lại</a>
+                            <button type="submit" class="btn btn-danger">Xác nhận Xóa</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
